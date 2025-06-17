@@ -1,0 +1,40 @@
+flowchart TD
+  User_Query[User Query] --> A_Supervisor
+
+  subgraph Agents [Brain Power & Decision Making]
+      A_Supervisor[1. Supervisor Agent] -- Routes Query --> A_ModelInfo
+      A_Supervisor -- Routes Query --> A_MLOps
+      A_Supervisor -- Routes Query --> A_FeatureStore
+      A_Supervisor -- Routes Query --> A_General
+      A_Supervisor -- Routes Query --> A_Onboarding
+
+      A_ModelInfo[2. Model Information Agent]
+      A_MLOps[3. MLOps Documentation Agent]
+      A_FeatureStore[4. Feature Store Agent]
+      A_General[5. General ML & Platform Agent]
+      A_Onboarding[6. Onboarding & Access Agent]
+  end
+
+  subgraph Tools [Data Sources & Capabilities]
+      T_MLflow((MLflow Registry API))
+      T_Confluence{{Confluence Search API}}
+      T_Snowflake[["Snowflake DB Query"]]
+      T_GoogleSearch{{Google Search API}}
+  end
+
+  A_ModelInfo --> |Queries| T_MLflow
+  A_MLOps --> |Searches| T_Confluence
+  A_FeatureStore --> |Searches Docs / Queries Data| T_Confluence
+  A_FeatureStore --> |Queries Data| T_Snowflake
+  A_General --> |Searches| T_GoogleSearch
+  A_Onboarding --> |Searches Docs| T_Confluence
+
+  T_MLflow --> R_Response
+  T_Confluence --> R_Response
+  T_Snowflake --> R_Response
+  T_GoogleSearch --> R_Response
+
+  R_Response[Formatted Response] --> End[End Conversation]
+
+  style Agents fill:#e0f7fa,stroke:#00acc1,stroke-width:2px,stroke-dasharray: 5 5;
+  style Tools fill:#ffe0b2,stroke:#ff9800,stroke-width:2px,stroke-dasharray: 5 5;
