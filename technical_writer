@@ -1,0 +1,40 @@
+graph TD
+    subgraph "Trigger"
+        A[GitLab Merge Event];
+        B(Webhook Listener);
+    end
+
+    subgraph "Agent Core"
+        C[1. Fetch & Extract Info];
+        D[2. Synthesize Documentation];
+        E{Check Environment};
+    end
+    
+    subgraph "Path A: Development (Human-in-the-Loop)"
+        F[3a. Save for Preview <br/> 'preview_session.json'];
+        G[4a. Human reviews in Streamlit App];
+        H{"Approve?"};
+        I[5a. Publish to Confluence];
+    end
+
+    subgraph "Path B: Production (Fully Automated)"
+        J[3b. Publish Directly to Confluence];
+    end
+
+    L((✅ Process Complete));
+
+    %% Define the process flow
+    A --> B --> C --> D --> E;
+    E --o|'development'| F;
+    F --> G --> H;
+    H --o|Yes| I;
+    H --x|No| L;
+    I --> L;
+    
+    E --x|'production'| J;
+    J --> L;
+
+    %% Styling
+    style F fill:#e3f2fd,stroke:#333,stroke-width:2px;
+    style G fill:#e3f2fd,stroke:#333,stroke-width:2px;
+    style J fill:#e8f5e9,stroke:#333,stroke-width:2px;
